@@ -11,7 +11,7 @@ import {
   Sparkles,
   Star,
 } from "lucide-react";
-import { menuItems, formatPrice } from "../data/menu";
+import { menuItems, formatPrice } from "/public/data.js";
 
 const values = [
   {
