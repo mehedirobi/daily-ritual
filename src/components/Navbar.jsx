@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
 import { ArrowUpRight, Coffee, Menu, X } from "lucide-react";
 
@@ -13,52 +13,64 @@ const navLinks = [
 const desktopLinkClass = ({ isActive }) =>
   [
     "group relative inline-flex min-h-10 items-center justify-center",
-    "rounded-full px-3.5 text-[13px] font-medium",
-    "transition-colors duration-200",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest",
+    "rounded-full px-3 py-2 text-[13px] font-medium",
+    "transition-colors duration-200 ease-out",
+    "motion-reduce:transition-none",
+    "focus-visible:outline-2 focus-visible:outline-offset-2",
+    "focus-visible:outline-[#263D32]",
     isActive
-      ? "bg-forest/[0.07] text-forest"
-      : "text-espresso/70 hover:bg-forest/[0.05] hover:text-forest",
+      ? "bg-[#263D32]/[0.08] text-[#263D32]"
+      : "text-[#29251F]/75 hover:bg-[#263D32]/[0.05] hover:text-[#263D32]",
   ].join(" ");
 
 const mobileLinkClass = ({ isActive }) =>
   [
-    "flex min-h-12 items-center justify-between gap-3 rounded-xl px-4",
-    "text-sm font-medium transition-colors duration-200",
-    "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest",
+    "flex min-h-12 items-center justify-between gap-3",
+    "rounded-xl px-4 py-3 text-sm font-medium",
+    "transition-colors duration-200 ease-out",
+    "motion-reduce:transition-none",
+    "focus-visible:outline-2 focus-visible:outline-offset-2",
+    "focus-visible:outline-[#263D32]",
     isActive
-      ? "bg-forest/[0.08] text-forest"
-      : "text-espresso/75 hover:bg-forest/[0.05] hover:text-forest",
+      ? "bg-[#263D32]/[0.08] text-[#263D32]"
+      : "text-[#29251F]/80 hover:bg-[#263D32]/[0.05] hover:text-[#263D32]",
   ].join(" ");
 
-const ctaClass =
-  "group inline-flex min-h-11 items-center justify-center gap-2 rounded-full " +
-  "bg-forest px-5 text-[12px] font-semibold !text-cream shadow-sm " +
-  "transition-colors duration-200 hover:bg-caramel " +
-  "focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-forest";
+const ctaClass = [
+  "group inline-flex min-h-11 items-center justify-center gap-2",
+  "rounded-full bg-[#263D32] px-5 py-3",
+  "text-xs font-semibold !text-[#F7F1E7]",
+  "shadow-sm transition-[background-color,transform,box-shadow]",
+  "duration-200 ease-out hover:bg-[#B97745]",
+  "hover:shadow-md active:scale-[0.98]",
+  "motion-reduce:transition-none motion-reduce:active:scale-100",
+  "focus-visible:outline-2 focus-visible:outline-offset-4",
+  "focus-visible:outline-[#263D32]",
+].join(" ");
 
-function BrandLogo() {
+function BrandLogo({ onNavigate }) {
   return (
     <Link
       to="/"
       aria-label="Daily Ritual home"
-      className="group inline-flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3"
+      onClick={onNavigate}
+      className="group inline-flex min-w-0 shrink items-center gap-2 sm:gap-3"
     >
-      <span className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-forest text-cream ring-1 ring-forest/10 transition-colors duration-200 group-hover:bg-caramel sm:h-11 sm:w-11">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#263D32] text-[#F7F1E7] ring-1 ring-[#263D32]/10 transition-colors duration-200 group-hover:bg-[#B97745] motion-reduce:transition-none sm:h-11 sm:w-11">
         <Coffee
           size={21}
           strokeWidth={1.7}
           aria-hidden="true"
-          className="transition-transform duration-300 group-hover:rotate-[-8deg]"
+          className="transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none"
         />
       </span>
 
       <span className="flex min-w-0 flex-col">
-        <span className="font-display text-[21px] leading-none tracking-[-0.045em] text-forest sm:text-[24px]">
+        <span className="font-display text-[19px] leading-tight tracking-[-0.045em] !text-[#263D32] sm:text-2xl">
           Daily Ritual
         </span>
 
-        <span className="mt-1.5 whitespace-nowrap text-[8px] font-medium uppercase tracking-[0.13em] text-espresso/60 sm:text-[9px] sm:tracking-[0.17em]">
+        <span className="mt-1 hidden whitespace-nowrap text-[9px] font-medium uppercase tracking-[0.12em] !text-[#29251F]/65 min-[380px]:block sm:tracking-[0.15em]">
           Your daily dose of something beautiful
         </span>
       </span>
@@ -69,6 +81,9 @@ function BrandLogo() {
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const mobileNavigationId = useId();
+
+  const closeMenu = () => setOpen(false);
 
   useEffect(() => {
     setOpen(false);
@@ -77,11 +92,11 @@ export default function Navbar() {
   useEffect(() => {
     if (!open) return undefined;
 
-    function handleKeyDown(event) {
+    const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         setOpen(false);
       }
-    }
+    };
 
     window.addEventListener("keydown", handleKeyDown);
 
@@ -91,12 +106,12 @@ export default function Navbar() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-espresso/[0.08] bg-cream/95 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-[#29251F]/[0.08] bg-[#F7F1E7]/95 backdrop-blur-xl">
       <nav
         aria-label="Main navigation"
-        className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-3 px-4 sm:h-[76px] sm:px-6 lg:gap-5 lg:px-8 xl:px-10"
+        className="mx-auto flex h-[68px] max-w-7xl items-center justify-between gap-2 px-3 min-[380px]:px-4 sm:h-[76px] sm:gap-4 sm:px-6 lg:gap-5 lg:px-8 xl:px-10"
       >
-        <BrandLogo />
+        <BrandLogo onNavigate={closeMenu} />
 
         {/* Desktop navigation */}
         <div className="hidden items-center gap-1 lg:flex xl:gap-2">
@@ -109,14 +124,18 @@ export default function Navbar() {
             >
               {({ isActive }) => (
                 <>
-                  {link.label}
+                  <span>{link.label}</span>
 
-                  {isActive && (
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-caramel"
-                    />
-                  )}
+                  <span
+                    aria-hidden="true"
+                    className={[
+                      "absolute inset-x-3 bottom-1 h-0.5 rounded-full",
+                      "origin-center bg-[#B97745]",
+                      "transition-transform duration-200 ease-out",
+                      "motion-reduce:transition-none",
+                      isActive ? "scale-x-100" : "scale-x-0",
+                    ].join(" ")}
+                  />
                 </>
               )}
             </NavLink>
@@ -128,23 +147,23 @@ export default function Navbar() {
           to="/menu"
           className={`${ctaClass} hidden shrink-0 lg:inline-flex`}
         >
-          <span className="!text-cream">Explore Menu</span>
+          <span className="!text-inherit">Explore Menu</span>
 
           <ArrowUpRight
             size={15}
             strokeWidth={2}
             aria-hidden="true"
-            className="shrink-0 !text-cream transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            className="shrink-0 !text-inherit transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
           />
         </Link>
 
         {/* Mobile menu toggle */}
         <button
           type="button"
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-forest transition-colors hover:bg-forest/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest lg:hidden"
+          className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full !text-[#263D32] transition-colors duration-200 hover:bg-[#263D32]/[0.07] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#263D32] motion-reduce:transition-none lg:hidden"
           aria-label={open ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={open}
-          aria-controls="mobile-navigation"
+          aria-controls={mobileNavigationId}
           onClick={() => setOpen((current) => !current)}
         >
           {open ? (
@@ -157,19 +176,21 @@ export default function Navbar() {
 
       {/* Mobile navigation */}
       <div
-        id="mobile-navigation"
+        id={mobileNavigationId}
         aria-hidden={!open}
+        inert={!open}
         className={[
-          "grid overflow-hidden border-t border-espresso/[0.08] bg-cream",
-          "transition-[grid-template-rows,opacity] duration-200 ease-out",
+          "grid overflow-hidden border-t border-[#29251F]/[0.08] bg-[#F7F1E7]",
+          "transition-[grid-template-rows,opacity,visibility]",
+          "duration-250 ease-out",
           "motion-reduce:transition-none lg:hidden",
           open
-            ? "grid-rows-[1fr] opacity-100"
-            : "pointer-events-none grid-rows-[0fr] opacity-0",
+            ? "visible grid-rows-[1fr] opacity-100"
+            : "invisible pointer-events-none grid-rows-[0fr] opacity-0",
         ].join(" ")}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className="mx-auto max-w-7xl px-4 pb-5 pt-4 sm:px-6">
+          <div className="mx-auto max-w-7xl px-3 pb-5 pt-4 min-[380px]:px-4 sm:px-6">
             <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <NavLink
@@ -177,8 +198,7 @@ export default function Navbar() {
                   to={link.to}
                   end={link.to === "/"}
                   className={mobileLinkClass}
-                  onClick={() => setOpen(false)}
-                  tabIndex={open ? 0 : -1}
+                  onClick={closeMenu}
                 >
                   {({ isActive }) => (
                     <>
@@ -186,11 +206,12 @@ export default function Navbar() {
 
                       <ArrowUpRight
                         size={16}
+                        strokeWidth={1.8}
                         aria-hidden="true"
                         className={
                           isActive
-                            ? "text-caramel"
-                            : "text-espresso/40"
+                            ? "shrink-0 text-[#B97745]"
+                            : "shrink-0 text-[#29251F]/40"
                         }
                       />
                     </>
@@ -201,20 +222,20 @@ export default function Navbar() {
 
             <Link
               to="/menu"
-              onClick={() => setOpen(false)}
-              tabIndex={open ? 0 : -1}
-              className={`${ctaClass} mt-4 w-full text-sm`}
+              onClick={closeMenu}
+              className={`${ctaClass} mt-4 w-full`}
             >
-              <span className="!text-cream">Explore Our Menu</span>
+              <span className="!text-inherit">Explore Our Menu</span>
 
               <ArrowUpRight
                 size={16}
+                strokeWidth={1.8}
                 aria-hidden="true"
-                className="!text-cream"
+                className="!text-inherit"
               />
             </Link>
 
-            <p className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.17em] text-espresso/50">
+            <p className="mt-5 text-center text-[10px] font-medium uppercase tracking-[0.15em] !text-[#29251F]/55">
               Good coffee. Better moments.
             </p>
           </div>
