@@ -8,6 +8,7 @@ import Menu from "../pages/Menu";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import NotFound from "../pages/NotFound";
+import MenuDetails from "../pages/MenuDetails.jsx";
 
 function AppLayout() {
   return (
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "menu",
         element: <Menu />,
+      },
+      {
+        path: "/menu/:id",
+        element: <MenuDetails />,
       },
       {
         path: "about",

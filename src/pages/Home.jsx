@@ -1,4 +1,5 @@
-import { motion } from "motion/react";
+
+import { motion, useReducedMotion } from "motion/react";
 import { Link } from "react-router";
 import {
   ArrowDown,
@@ -55,44 +56,162 @@ const testimonials = [
   },
 ];
 
+const highlights = [
+  "A slower kind of morning",
+  "Coffee made with intention",
+  "Little moments worth keeping",
+];
+
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
   visible: { opacity: 1, y: 0 },
 };
 
+const heroImage =
+  "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=2000&q=85";
+
+const storyImage =
+  "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85";
+
+const ctaImage =
+  "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1800&q=85";
+
+function SectionLabel({ children, light = false }) {
+  return (
+    <p
+      className={`text-[10px] font-semibold uppercase tracking-[0.22em] sm:text-xs ${
+        light ? "text-[#D7A477]" : "text-caramel"
+      }`}
+    >
+      {children}
+    </p>
+  );
+}
+
+function ArrowLink({ to, children, light = false }) {
+  return (
+    <Link
+      to={to}
+      className={`group inline-flex min-h-11 w-fit items-center gap-2 border-b pb-2 text-xs font-semibold uppercase tracking-[0.1em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-4 ${
+        light
+          ? "border-cream/50 !text-cream hover:border-[#D7A477] hover:!text-[#D7A477] focus-visible:outline-cream"
+          : "border-caramel !text-forest hover:!text-caramel focus-visible:outline-forest"
+      }`}
+    >
+      <span>{children}</span>
+      <ArrowRight
+        size={16}
+        aria-hidden="true"
+        className="shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+      />
+    </Link>
+  );
+}
+
+function PrimaryButton({ to, children, light = false }) {
+  return (
+    <Link
+      to={to}
+      className={`group inline-flex min-h-12 items-center justify-center gap-3 px-6 text-xs font-semibold uppercase tracking-[0.1em] shadow-sm transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-4 ${
+        light
+          ? "bg-cream !text-forest hover:bg-caramel hover:!text-white focus-visible:outline-cream"
+          : "bg-forest !text-cream hover:bg-caramel hover:!text-white focus-visible:outline-forest"
+      }`}
+    >
+      <span
+        className={
+          light
+            ? "!text-forest group-hover:!text-white"
+            : "!text-cream group-hover:!text-white"
+        }
+      >
+        {children}
+      </span>
+      <ArrowRight
+        size={16}
+        aria-hidden="true"
+        className={`shrink-0 transition-transform duration-200 group-hover:translate-x-1 ${
+          light
+            ? "!text-forest group-hover:!text-white"
+            : "!text-cream group-hover:!text-white"
+        }`}
+      />
+    </Link>
+  );
+}
+
+function SectionHeading({ label, title, description, action }) {
+  return (
+    <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+      <div className="max-w-2xl">
+        <SectionLabel>{label}</SectionLabel>
+        <h2 className="mt-4 font-display text-4xl leading-[1.08] tracking-[-0.04em] text-forest sm:text-5xl lg:text-6xl">
+          {title}
+        </h2>
+        {description && (
+          <p className="mt-4 max-w-xl text-sm leading-7 text-espresso/65 sm:text-base">
+            {description}
+          </p>
+        )}
+      </div>
+      {action}
+    </div>
+  );
+}
+
 export default function Home() {
-  const featuredItems = menuItems.slice(0, 3);
+  const reduceMotion = useReducedMotion();
+  const featuredItems = Array.isArray(menuItems)
+    ? menuItems.slice(0, 3)
+    : [];
+
+  const reveal = reduceMotion
+    ? {}
+    : {
+        initial: "hidden",
+        whileInView: "visible",
+        viewport: { once: true, amount: 0.15 },
+        variants: fadeUp,
+        transition: { duration: 0.5 },
+      };
 
   return (
     <main className="overflow-hidden bg-cream text-espresso">
       {/* Hero */}
-      <section className="relative isolate min-h-[600px] bg-forest sm:min-h-[680px] lg:min-h-[700px]">
+      <section className="relative isolate flex min-h-[590px] items-center bg-forest sm:min-h-[660px] lg:min-h-[700px]">
         <img
-          src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=2000&q=90"
-          alt="Warm coffee shop interior with a relaxed, inviting atmosphere"
+          src={heroImage}
+          alt="A welcoming coffee shop with warm natural light"
           fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
         />
 
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-espresso/90 via-espresso/65 to-espresso/15" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-espresso/45 via-transparent to-espresso/10" />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-r from-[#211F1B]/90 via-[#211F1B]/65 to-[#211F1B]/20"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-t from-[#211F1B]/45 via-transparent to-black/10"
+          aria-hidden="true"
+        />
 
-        <div className="mx-auto flex min-h-[600px] max-w-7xl items-center px-5 py-20 sm:min-h-[680px] sm:px-8 lg:min-h-[700px] lg:px-10">
+        <div className="mx-auto w-full max-w-7xl px-5 py-20 sm:px-8 sm:py-24 lg:px-10 lg:py-28">
           <motion.div
-            initial="hidden"
+            initial={reduceMotion ? false : "hidden"}
             animate="visible"
             variants={{
               hidden: {},
               visible: {
-                transition: { staggerChildren: 0.12 },
+                transition: { staggerChildren: reduceMotion ? 0 : 0.1 },
               },
             }}
             className="max-w-3xl text-cream"
           >
             <motion.p
               variants={fadeUp}
-              transition={{ duration: 0.6 }}
-              className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.24em] text-[#E0B18B] sm:text-xs"
+              transition={{ duration: reduceMotion ? 0 : 0.5 }}
+              className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E2B58F] sm:text-xs"
             >
               <span className="h-px w-8 bg-caramel" />
               Your neighbourhood coffee ritual
@@ -100,8 +219,8 @@ export default function Home() {
 
             <motion.h1
               variants={fadeUp}
-              transition={{ duration: 0.65 }}
-              className="mt-6 font-display text-5xl leading-[1.04] tracking-[-0.045em] sm:text-7xl lg:text-[88px]"
+              transition={{ duration: reduceMotion ? 0 : 0.55 }}
+              className="mt-6 font-display text-[clamp(2.9rem,7vw,5.8rem)] leading-[1.02] tracking-[-0.05em]"
             >
               Your daily dose
               <br />
@@ -111,8 +230,8 @@ export default function Home() {
 
             <motion.p
               variants={fadeUp}
-              transition={{ duration: 0.65 }}
-              className="mt-6 max-w-lg text-sm leading-7 text-cream/75 sm:text-base sm:leading-8"
+              transition={{ duration: reduceMotion ? 0 : 0.55 }}
+              className="mt-6 max-w-lg text-sm leading-7 text-cream/80 sm:text-base sm:leading-8"
             >
               Thoughtfully brewed coffee, freshly made favourites, and a
               welcoming space to slow down. Make a little room for yourself.
@@ -120,66 +239,56 @@ export default function Home() {
 
             <motion.div
               variants={fadeUp}
-              transition={{ duration: 0.65 }}
+              transition={{ duration: reduceMotion ? 0 : 0.55 }}
               className="mt-8 flex flex-wrap gap-3"
             >
-              <Link
-                to="/menu"
-                className="group inline-flex min-h-12 items-center justify-center gap-3 bg-cream px-6 text-xs font-semibold uppercase tracking-[0.12em] text-forest transition-colors duration-200 hover:bg-caramel hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
-              >
+              <PrimaryButton to="/menu" light>
                 Explore Our Menu
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </Link>
+              </PrimaryButton>
 
               <Link
                 to="/about"
-                className="inline-flex min-h-12 items-center justify-center gap-2 border border-cream/50 px-6 text-xs font-semibold uppercase tracking-[0.12em] text-cream transition-colors duration-200 hover:border-cream hover:bg-cream/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
+                className="inline-flex min-h-12 items-center justify-center gap-2 border border-cream/55 px-6 text-xs font-semibold uppercase tracking-[0.1em] !text-cream transition-colors duration-200 hover:border-cream hover:bg-cream/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
               >
-                Our Story
-                <ArrowUpRight size={15} />
+                <span className="!text-cream">Our Story</span>
+                <ArrowUpRight size={15} aria-hidden="true" />
               </Link>
             </motion.div>
 
             <motion.div
               variants={fadeUp}
-              transition={{ duration: 0.65 }}
-              className="mt-12 flex items-center gap-3 text-xs text-cream/65 sm:mt-16"
+              transition={{ duration: reduceMotion ? 0 : 0.55 }}
+              className="mt-12 flex items-center gap-3 text-xs text-cream/70 sm:mt-16"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full border border-cream/30">
-                <ArrowDown size={14} />
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-cream/35">
+                <ArrowDown size={15} aria-hidden="true" />
               </span>
               A little moment, just for you
             </motion.div>
           </motion.div>
         </div>
 
-        <div className="absolute bottom-8 right-6 hidden items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em] text-cream/65 lg:flex">
-          <span className="h-px w-10 bg-cream/50" />
+        <div className="absolute bottom-8 right-8 hidden items-center gap-3 text-[10px] font-medium uppercase tracking-[0.18em] text-cream/75 lg:flex">
+          <span className="h-px w-10 bg-cream/55" />
           Good coffee. Better moments.
         </div>
       </section>
 
-      {/* Brand introduction strip */}
+      {/* Brand highlights */}
       <section className="border-b border-espresso/10 bg-[#F0E8DA]">
-        <div className="mx-auto grid max-w-7xl gap-5 px-5 py-7 sm:grid-cols-3 sm:gap-8 sm:px-8 lg:px-10">
-          {[
-            "A slower kind of morning",
-            "Coffee made with intention",
-            "Little moments worth keeping",
-          ].map((item, index) => (
+        <div className="mx-auto grid max-w-7xl gap-4 px-5 py-6 sm:grid-cols-3 sm:gap-6 sm:px-8 lg:px-10">
+          {highlights.map((item, index) => (
             <div
               key={item}
               className={`flex items-center justify-center gap-3 text-center sm:justify-start ${
-                index !== 0 ? "sm:border-l sm:border-espresso/15 sm:pl-6" : ""
+                index > 0 ? "sm:border-l sm:border-espresso/15 sm:pl-6" : ""
               }`}
             >
               <Sparkles
                 size={16}
                 strokeWidth={1.6}
                 className="shrink-0 text-caramel"
+                aria-hidden="true"
               />
               <p className="text-xs font-medium tracking-wide text-espresso/75 sm:text-sm">
                 {item}
@@ -191,46 +300,29 @@ export default function Home() {
 
       {/* Featured menu */}
       <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeUp}
-          transition={{ duration: 0.55 }}
-          className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between"
-        >
-          <div>
-            <p className="eyebrow">A few favourites</p>
-            <h2 className="mt-4 font-display text-4xl leading-tight tracking-[-0.04em] text-forest sm:text-5xl lg:text-6xl">
-              Made to be savoured.
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-7 text-espresso/60 sm:text-base">
-              From your first morning sip to an afternoon pick-me-up, find
-              something worth slowing down for.
-            </p>
-          </div>
-
-          <Link
-            to="/menu"
-            className="group inline-flex min-h-10 w-fit shrink-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-forest transition-colors hover:text-caramel"
-          >
-            View Full Menu
-            <ArrowRight
-              size={16}
-              className="transition-transform duration-200 group-hover:translate-x-1"
-            />
-          </Link>
+        <motion.div {...reveal}>
+          <SectionHeading
+            label="A few favourites"
+            title="Made to be savoured."
+            description="From your first morning sip to an afternoon pick-me-up, find something worth slowing down for."
+            action={
+              <ArrowLink to="/menu">View Full Menu</ArrowLink>
+            }
+          />
         </motion.div>
 
         {featuredItems.length > 0 ? (
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-7">
+          <div className="mt-10 grid gap-7 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-8">
             {featuredItems.map((item, index) => (
               <motion.article
-                key={item.id}
-                initial={{ opacity: 0, y: 24 }}
+                key={item.id ?? item.name}
+                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.15 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.45,
+                  delay: reduceMotion ? 0 : index * 0.08,
+                }}
                 className="group min-w-0"
               >
                 <Link
@@ -238,39 +330,52 @@ export default function Home() {
                   aria-label={`Explore the menu featuring ${item.name}`}
                   className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-forest"
                 >
-                  <div className="relative aspect-[4/4.3] overflow-hidden bg-[#E8DFD0]">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-                    />
+                  <div className="relative aspect-[4/4.2] overflow-hidden bg-[#E8DFD0]">
+                    {item.image ? (
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04] motion-reduce:transition-none"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-forest/50">
+                        <Coffee size={40} strokeWidth={1.2} />
+                      </div>
+                    )}
 
                     {item.tag && (
-                      <span className="absolute left-4 top-4 bg-cream px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.15em] text-forest">
+                      <span className="absolute left-4 top-4 bg-cream px-3 py-1.5 text-[9px] font-semibold uppercase tracking-[0.13em] text-forest">
                         {item.tag}
                       </span>
                     )}
 
-                    <span className="absolute bottom-4 right-4 flex h-10 w-10 translate-y-2 items-center justify-center rounded-full bg-cream text-forest opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                      <ArrowUpRight size={18} />
+                    <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-cream text-forest transition-colors group-hover:bg-forest group-hover:text-cream">
+                      <ArrowUpRight size={18} aria-hidden="true" />
                     </span>
                   </div>
 
                   <div className="flex items-start justify-between gap-4 border-b border-espresso/15 py-5">
                     <div className="min-w-0">
-                      <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-caramel">
-                        {item.category}
-                      </p>
+                      {item.category && (
+                        <p className="text-[10px] font-medium uppercase tracking-[0.15em] text-caramel">
+                          {item.category}
+                        </p>
+                      )}
+
                       <h3 className="mt-2 font-display text-2xl text-forest transition-colors group-hover:text-caramel">
                         {item.name}
                       </h3>
-                      <p className="mt-2 text-sm leading-6 text-espresso/55">
-                        {item.description}
-                      </p>
+
+                      {item.description && (
+                        <p className="mt-2 text-sm leading-6 text-espresso/60">
+                          {item.description}
+                        </p>
+                      )}
                     </div>
 
-                    <span className="shrink-0 pt-5 text-sm font-semibold tabular-nums text-forest">
+                    <span className="shrink-0 pt-1 text-sm font-semibold tabular-nums text-forest">
                       {formatPrice(item.price)}
                     </span>
                   </div>
@@ -279,10 +384,22 @@ export default function Home() {
             ))}
           </div>
         ) : (
-          <p className="mt-10 border border-espresso/10 p-6 text-sm text-espresso/60">
-            Our menu is being prepared. Visit the menu page to explore what is
-            available.
-          </p>
+          <div className="mt-10 border border-espresso/10 bg-white/30 p-7">
+            <Coffee
+              size={26}
+              className="text-caramel"
+              aria-hidden="true"
+            />
+            <p className="mt-3 font-display text-xl text-forest">
+              Something good is brewing.
+            </p>
+            <p className="mt-2 text-sm leading-6 text-espresso/60">
+              Our featured menu is being prepared. Explore the menu for more.
+            </p>
+            <div className="mt-5">
+              <ArrowLink to="/menu">Explore Menu</ArrowLink>
+            </div>
+          </div>
         )}
       </section>
 
@@ -290,36 +407,41 @@ export default function Home() {
       <section className="bg-[#F0E8DA]">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-20 lg:px-10 lg:py-28">
           <motion.div
-            initial={{ opacity: 0, x: -18 }}
+            initial={reduceMotion ? false : { opacity: 0, x: -18 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: reduceMotion ? 0 : 0.55 }}
             className="relative"
           >
-            <div className="aspect-[5/4] overflow-hidden">
+            <div className="relative aspect-[5/4]">
               <img
-                src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=85"
+                src={storyImage}
                 alt="Coffee being prepared with care"
                 loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                decoding="async"
+                className="h-full w-full object-cover"
               />
             </div>
 
-            <div className="absolute -bottom-5 -right-3 max-w-[220px] bg-forest p-5 text-cream sm:-right-5 sm:max-w-[250px] sm:p-6">
+            <div className="absolute -bottom-5 right-0 max-w-[225px] bg-forest p-5 text-cream sm:-right-5 sm:max-w-[260px] sm:p-6">
               <p className="font-display text-2xl italic leading-snug sm:text-3xl">
-                "Make the ordinary feel extraordinary."
+                Make the ordinary feel extraordinary.
               </p>
             </div>
-            <div className="absolute -left-3 -top-3 -z-0 h-20 w-20 border border-caramel/60 sm:-left-5 sm:-top-5 sm:h-28 sm:w-28" />
+
+            <div
+              aria-hidden="true"
+              className="absolute -left-3 -top-3 -z-0 h-20 w-20 border border-caramel/60 sm:-left-5 sm:-top-5 sm:h-28 sm:w-28"
+            />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 18 }}
+            initial={reduceMotion ? false : { opacity: 0, x: 18 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: reduceMotion ? 0 : 0.55 }}
           >
-            <p className="eyebrow">The Daily Ritual philosophy</p>
+            <SectionLabel>The Daily Ritual philosophy</SectionLabel>
 
             <h2 className="mt-5 font-display text-4xl leading-[1.1] tracking-[-0.04em] text-forest sm:text-5xl lg:text-6xl">
               Life feels better when you slow down.
@@ -338,37 +460,23 @@ export default function Home() {
               </p>
             </div>
 
-            <Link
-              to="/about"
-              className="group mt-8 inline-flex min-h-11 items-center gap-3 border-b border-caramel pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-forest transition-colors hover:text-caramel"
-            >
-              Discover Our Story
-              <ArrowRight
-                size={16}
-                className="transition-transform duration-200 group-hover:translate-x-1"
-              />
-            </Link>
+            <div className="mt-8">
+              <ArrowLink to="/about">Discover Our Story</ArrowLink>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Brand values */}
       <section className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-28">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={fadeUp}
-          transition={{ duration: 0.55 }}
-          className="mx-auto max-w-2xl text-center"
-        >
-          <p className="eyebrow">The little things</p>
+        <motion.div {...reveal} className="mx-auto max-w-2xl text-center">
+          <SectionLabel>The little things</SectionLabel>
           <h2 className="mt-4 font-display text-4xl leading-tight tracking-[-0.04em] text-forest sm:text-5xl">
             Thoughtful by nature.
           </h2>
-          <p className="mt-4 text-sm leading-7 text-espresso/60 sm:text-base">
-            A good experience is never just one thing. It is a collection
-            of small details, done well.
+          <p className="mt-4 text-sm leading-7 text-espresso/65 sm:text-base">
+            A good experience is never just one thing. It is a collection of
+            small details, done well.
           </p>
         </motion.div>
 
@@ -376,21 +484,23 @@ export default function Home() {
           {values.map(({ icon: Icon, title, description }, index) => (
             <motion.article
               key={title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.45, delay: index * 0.1 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.4,
+                delay: reduceMotion ? 0 : index * 0.08,
+              }}
               className="group border border-espresso/10 bg-white/30 p-7 transition-colors duration-300 hover:border-caramel/50 hover:bg-white/65 sm:p-8"
             >
               <span className="flex h-12 w-12 items-center justify-center rounded-full bg-forest/10 text-forest transition-colors duration-300 group-hover:bg-forest group-hover:text-cream">
-                <Icon size={21} strokeWidth={1.6} />
+                <Icon size={21} strokeWidth={1.6} aria-hidden="true" />
               </span>
 
               <h3 className="mt-6 font-display text-2xl text-forest">
                 {title}
               </h3>
-
-              <p className="mt-3 text-sm leading-7 text-espresso/60">
+              <p className="mt-3 text-sm leading-7 text-espresso/65">
                 {description}
               </p>
             </motion.article>
@@ -401,44 +511,48 @@ export default function Home() {
       {/* Testimonials */}
       <section className="border-y border-espresso/10 bg-[#F0E8DA]">
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-20 lg:px-10 lg:py-24">
-          <div className="mx-auto max-w-2xl text-center">
-            <p className="eyebrow">Words over coffee</p>
+          <motion.div {...reveal} className="mx-auto max-w-2xl text-center">
+            <SectionLabel>Words over coffee</SectionLabel>
             <h2 className="mt-4 font-display text-4xl leading-tight tracking-[-0.04em] text-forest sm:text-5xl">
-              It's all about how it feels.
+              It’s all about how it feels.
             </h2>
             <div
               className="mt-5 flex justify-center gap-1 text-caramel"
-              aria-label="Decorative five-star rating"
+              aria-hidden="true"
             >
               {Array.from({ length: 5 }, (_, index) => (
                 <Star key={index} size={15} fill="currentColor" />
               ))}
             </div>
-          </div>
+          </motion.div>
 
           <div className="mt-10 grid gap-5 md:grid-cols-3 lg:mt-14">
             {testimonials.map((item, index) => (
               <motion.figure
                 key={item.name}
-                initial={{ opacity: 0, y: 18 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.45, delay: index * 0.1 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.4,
+                  delay: reduceMotion ? 0 : index * 0.08,
+                }}
                 className="flex flex-col border border-espresso/10 bg-cream/75 p-6 sm:p-7"
               >
                 <Quote
                   size={25}
                   strokeWidth={1.4}
                   className="text-caramel"
+                  aria-hidden="true"
                 />
                 <blockquote className="mt-5 flex-1 font-display text-xl leading-relaxed text-forest">
-                  "{item.quote}"
+                  “{item.quote}”
                 </blockquote>
                 <figcaption className="mt-7 border-t border-espresso/10 pt-4">
                   <p className="text-sm font-semibold text-espresso/80">
                     {item.name}
                   </p>
-                  <p className="mt-1 text-xs text-espresso/50">
+                  <p className="mt-1 text-xs text-espresso/55">
                     {item.detail}
                   </p>
                 </figcaption>
@@ -446,8 +560,9 @@ export default function Home() {
             ))}
           </div>
 
-          <p className="mt-6 text-center text-xs leading-5 text-espresso/45">
-            Illustrative testimonials for this demo design, not verified customer reviews.
+          <p className="mt-6 text-center text-xs leading-5 text-espresso/50">
+            Illustrative testimonials for this demo design, not verified
+            customer reviews.
           </p>
         </div>
       </section>
@@ -455,49 +570,44 @@ export default function Home() {
       {/* Final CTA */}
       <section className="relative isolate overflow-hidden bg-forest">
         <img
-          src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=1800&q=85"
+          src={ctaImage}
           alt=""
           aria-hidden="true"
           loading="lazy"
+          decoding="async"
           className="absolute inset-0 -z-20 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 -z-10 bg-forest/85" />
+        <div
+          className="absolute inset-0 -z-10 bg-forest/90"
+          aria-hidden="true"
+        />
 
         <motion.div
-          initial={{ opacity: 0, y: 18 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.55 }}
+          transition={{ duration: reduceMotion ? 0 : 0.5 }}
           className="mx-auto max-w-4xl px-5 py-16 text-center sm:px-8 sm:py-20 lg:py-24"
         >
-          <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-[#D7A477] sm:text-xs">
-            Your next favourite cup awaits
-          </p>
+          <SectionLabel light>Your next favourite cup awaits</SectionLabel>
 
           <h2 className="mt-5 font-display text-4xl leading-tight tracking-[-0.04em] text-cream sm:text-5xl lg:text-6xl">
             Make time for something beautiful.
           </h2>
 
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-cream/70 sm:text-base sm:leading-8">
-            Explore the menu, find your favourite, and make Daily Ritual
-            part of your day.
+          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-cream/75 sm:text-base sm:leading-8">
+            Explore the menu, find your favourite, and make Daily Ritual part
+            of your day.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              to="/menu"
-              className="group inline-flex min-h-12 items-center justify-center gap-3 bg-cream px-6 text-xs font-semibold uppercase tracking-[0.12em] text-forest transition-colors duration-200 hover:bg-caramel hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
-            >
+            <PrimaryButton to="/menu" light>
               Explore Our Menu
-              <ArrowRight
-                size={16}
-                className="transition-transform duration-200 group-hover:translate-x-1"
-              />
-            </Link>
+            </PrimaryButton>
 
             <Link
               to="/contact"
-              className="inline-flex min-h-12 items-center justify-center border border-cream/40 px-6 text-xs font-semibold uppercase tracking-[0.12em] text-cream transition-colors duration-200 hover:border-cream hover:bg-cream/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
+              className="inline-flex min-h-12 items-center justify-center border border-cream/50 px-6 text-xs font-semibold uppercase tracking-[0.1em] !text-cream transition-colors duration-200 hover:border-cream hover:bg-cream/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cream"
             >
               Get in Touch
             </Link>
